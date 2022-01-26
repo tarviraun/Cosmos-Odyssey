@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Document } from 'mongoose';
 import { EObjectStatus } from 'src/shared/enums/status.enum';
-import { Leg, LegSchema } from './sub-schemas/leg.schema';
+import { PricelistLeg } from './pricelist-leg.schema';
 
 export type PricelistDocument = Pricelist & Document;
 
@@ -11,24 +11,23 @@ export class Pricelist {
   @ApiProperty()
   readonly _id?: string;
 
+  @ApiProperty({ description: 'Origin travel pricelist ID' })
+  travelPriceListId: string;
+
   @ApiProperty({ description: 'pricelist ID' })
-  priceListId: string;
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'pricelistLeg',
+  })
+  legs: PricelistLeg[];
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ type: Date, required: true })
   validUntil: Date;
 
-  @ApiProperty({ type: Leg })
-  @Prop({ type: LegSchema, required: true, array: true })
-  legs: Leg[];
-
-  @ApiProperty()
+  @ApiPropertyOptional()
   @Prop({ required: true })
-  createdBy: string;
-
-  @ApiProperty()
-  @Prop({ required: true })
-  updatedBy: string;
+  createdAt: Date;
 
   @ApiPropertyOptional()
   @Prop({ required: true })

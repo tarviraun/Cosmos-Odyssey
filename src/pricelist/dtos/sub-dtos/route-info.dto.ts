@@ -3,7 +3,7 @@ import { DetailNameDto } from './detail-name.dto';
 
 export class RouteInfoDto {
   @ApiProperty()
-  id: string;
+  routeId: string;
 
   @ApiProperty({ type: DetailNameDto })
   from: DetailNameDto;

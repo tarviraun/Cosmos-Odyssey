@@ -3,7 +3,7 @@ import { DetailNameDto } from './detail-name.dto';
 
 export class ProviderDto {
   @ApiProperty()
-  id: string;
+  providerId: string;
 
   @ApiProperty({ type: DetailNameDto })
   company: DetailNameDto;
@@ -11,9 +11,9 @@ export class ProviderDto {
   @ApiProperty()
   price: number;
 
-  @ApiProperty()
-  flightStart: string;
+  @ApiProperty({ type: Date })
+  flightStart: Date;
 
-  @ApiProperty()
-  flightEnd: string;
+  @ApiProperty({ type: Date })
+  flightEnd: Date;
 }

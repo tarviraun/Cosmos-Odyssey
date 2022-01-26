@@ -6,7 +6,7 @@ import { DetailName, DetailNameSchema } from './detail-name.schema';
 export class Route {
   @ApiProperty()
   @Prop({ required: true })
-  id: string;
+  routeId: string;
 
   @ApiProperty({ type: DetailName })
   @Prop({ type: DetailNameSchema, required: true })

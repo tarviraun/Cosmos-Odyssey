@@ -6,7 +6,7 @@ import { DetailName, DetailNameSchema } from './detail-name.schema';
 export class Provider {
   @ApiProperty()
   @Prop({ required: true })
-  id: string;
+  providerId: string;
 
   @ApiProperty({ type: DetailName })
   @Prop({ type: DetailNameSchema, required: true })
