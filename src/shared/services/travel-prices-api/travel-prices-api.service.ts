@@ -5,12 +5,12 @@ import { map } from 'rxjs/operators';
 import { ITravelPricelist } from './interfaces/travel-pricelist.interface';
 
 @Injectable()
-export class TralvelPricesApiService {
+export class TravelPricesApiService {
   private readonly cosmosApi = process.env.COSMOS_API;
   private logger: Logger;
 
   constructor(private httpService: HttpService) {
-    this.logger = new Logger(TralvelPricesApiService.name);
+    this.logger = new Logger(TravelPricesApiService.name);
   }
 
   async fetchTravelPrices(): Promise<ITravelPricelist> {
