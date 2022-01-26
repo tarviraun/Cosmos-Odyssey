@@ -4,7 +4,7 @@ import { RouteInfoDto } from './sub-dtos/route-info.dto';
 
 export class PriceListRoutesResponseDto {
   @ApiProperty()
-  _id: string;
+  legId: string;
 
   @ApiProperty({ type: RouteInfoDto })
   route: RouteInfoDto;
@@ -12,9 +12,7 @@ export class PriceListRoutesResponseDto {
   @ApiProperty({ type: ProviderDto, isArray: true })
   providers: ProviderDto[];
 
-  @ApiProperty({ type: Date })
-  createdAt: Date;
-
-  @ApiProperty({ type: Date })
-  updatedAt: Date;
+  constructor(partial: Partial<PriceListRoutesResponseDto>) {
+    Object.assign(this, partial);
+  }
 }

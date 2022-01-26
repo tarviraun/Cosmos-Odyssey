@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { EObjectStatus } from 'src/shared/enums/status.enum';
 import { TravelPricesApiService } from 'src/shared/services/travel-prices-api/travel-prices-api.service';
+import { pricelistLegProjection } from '../constants/projections.constants';
 import { PriceListRoutesResponseDto } from '../dtos/pricelist-routes-response.dto';
 import { SearchRoutesRequestDTO } from '../dtos/search-routes-request.dto';
 import { ISearchRoutes } from '../interfaces/search-routes.interface';
@@ -32,16 +33,15 @@ export class PricelistService {
     query: SearchRoutesRequestDTO,
   ): Promise<PriceListRoutesResponseDto[]> {
     const { from, to } = query;
-    const currentTime = new Date();
     let activePricelist: Pricelist;
 
     try {
       activePricelist = await this.pricelistModel
-        .findOne({ validUntil: { $gt: currentTime } })
+        .findOne({ validUntil: { $gt: new Date() } })
         .sort({ validUntil: 'descending' })
         .lean();
 
-      if (activePricelist === null) {
+      if (!activePricelist?._id) {
         activePricelist = await this.fetchAndSavePricelist();
       }
 
@@ -52,13 +52,14 @@ export class PricelistService {
       if (from) filter['route.from.name'] = from;
       if (to) filter['route.to.name'] = to;
 
-      const routes = await this.pricelistLegModel.find(filter).lean();
-      return routes;
+      const routes = await this.pricelistLegModel
+        .find(filter, pricelistLegProjection)
+        .lean();
+
+      return routes.map((route) => new PriceListRoutesResponseDto(route));
     } catch (error) {
       throw new BadRequestException(error.message);
     }
-
-    return;
   }
 
   public async fetchAndSavePricelist(): Promise<Pricelist> {
