@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PricelistModule } from './pricelist/pricelist.module';
+import { ReservationModule } from './reservation/reservation.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { PricelistModule } from './pricelist/pricelist.module';
       useNewUrlParser: true,
     }),
     PricelistModule,
+    ReservationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

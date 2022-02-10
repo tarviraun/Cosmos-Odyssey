@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {BadRequestException, Injectable, Logger, NotFoundException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { EObjectStatus } from 'src/shared/enums/status.enum';
@@ -56,6 +56,8 @@ export class PricelistService {
         .find(filter, pricelistLegProjection)
         .lean();
 
+      console.log(routes);
+
       return routes.map((route) => new PriceListRoutesResponseDto(route));
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -67,8 +69,8 @@ export class PricelistService {
       const pricelist = await this.travelPricesApiService.fetchTravelPrices();
 
       if (!pricelist) {
-        this.logger.error(`Could not find travel pricelist`);
-        throw new BadRequestException(`Could not find travel pricelist`);
+        this.logger.error(`Could not find travel price-list`);
+        throw new BadRequestException(`Could not find travel price-list`);
       }
 
       const newPricelist = await this.pricelistModel.create({
@@ -123,5 +125,19 @@ export class PricelistService {
       console.log(err);
       throw new BadRequestException(err.message);
     }
+  }
+
+  public async getPriceListById(id: string): Promise<Pricelist> {
+    const pricelist = await this.pricelistModel
+      .findOne({ validUntil: { $gt: new Date() } })
+      .sort({ validUntil: 'descending' })
+      .lean();
+
+    if (!pricelist?._id) {
+      this.logger.error(`Could not find pricelist ${id}`);
+      throw new NotFoundException(`Could not find pricelist ${id}`);
+    }
+
+    return pricelist;
   }
 }
